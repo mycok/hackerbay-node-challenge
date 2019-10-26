@@ -1,0 +1,15 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "v1.0.0",
+      "title": "hackerbay developer backend challenge",
+      "description": "a mini micro service built with node js",
+      "contact": {
+        "name": "@myco",
+        "email": "mycovan@gmail.com"
+      }
+    }
+}
+
+
+  
