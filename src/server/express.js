@@ -7,6 +7,7 @@ import helmet from 'helmet';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../../swagger.json';
+import authRoutes from '../routes/auth.routes';
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
 app.set('strict routing', true);
+
+app.use('/', authRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/swagger');

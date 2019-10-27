@@ -1,6 +1,6 @@
 import app from './express';
 import config from '../config';
-import logger from '../../utils/logger';
+import logger from '../utils/logger';
 
 const { port } = config;
 
