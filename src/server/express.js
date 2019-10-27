@@ -9,6 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../../swagger.json';
 import authRoute from '../routes/auth.routes';
 import JsonPatchRoute from '../routes/jsonpatch.routes';
+import thumbnailRoute from '../routes/thumbnail.routes';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.set('strict routing', true);
 
 app.use('/', authRoute);
 app.use('/', JsonPatchRoute);
+app.use('/', thumbnailRoute);
 
 app.get('/', (req, res) => {
   res.redirect('/swagger');

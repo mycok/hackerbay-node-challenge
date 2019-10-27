@@ -42,35 +42,28 @@ const authenticate = expressJwt({
   userProperty: 'auth',
 });
 
-const isPatchDocumentValid = (req, res, next) => {
-  const { body: { document } } = req;
+const validateDocumentAndPatchProperties = (req, res, next) => {
+  const { body: { document, patch } } = req;
   if (!document || typeof document !== typeof JSON) return res.status(400).json({ error: 'document property is required and must be of type JSON!' });
+  if (!patch || typeof patch !== typeof JSON) return res.status(400).json({ error: 'patch property is required and must be of type JSON!' });
   return next();
 };
 
-const isPatchArrayValid = (req, res, next) => {
-  const { body: { patch } } = req;
-  if (!patch || typeof patch !== typeof JSON) return res.status(400).json({ error: 'patch property is required and must be of type json or array!' });
-  return next();
-};
-
-const isOpValid = (req, res, next) => {
+const validateOpsAndPathsParameters = (req, res, next) => {
   const { body: { patch } } = req;
   const validOps = ['replace', 'add', 'remove'];
-
-  patch.forEach((obj) => {
-    if (!validOps.includes(obj.op)) return res.status(400).json({ error: 'op property only supports add, replace and remove operations!' });
-  });
-  return next();
-};
-
-const isPathValid = (req, res, next) => {
-  const { body: { patch } } = req;
   const validPaths = ['/username', '/password'];
 
   patch.forEach((obj) => {
+    if (!validOps.includes(obj.op)) return res.status(400).json({ error: 'op property only supports add, replace and remove operations!' });
     if (!validPaths.includes(obj.path)) return res.status(400).json({ error: 'path property only supports /username and /password paths!' });
   });
+  return next();
+};
+
+const validateImageDownloadUrl = (req, res, next) => {
+  const { body: { imageUrl } } = req;
+  if (!imageUrl) return res.status(400).json({ error: 'An imageUrl property is required!' });
   return next();
 };
 
@@ -79,8 +72,7 @@ export {
   isUsernameValid,
   isPasswordValid,
   authenticate,
-  isPatchDocumentValid,
-  isPatchArrayValid,
-  isOpValid,
-  isPathValid,
+  validateDocumentAndPatchProperties,
+  validateOpsAndPathsParameters,
+  validateImageDownloadUrl,
 };

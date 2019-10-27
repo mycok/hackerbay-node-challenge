@@ -80,7 +80,7 @@ describe('test user json patch functionality', () => {
         })
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          expect(res.body.error).to.equal('patch property is required and must be of type json or array!');
+          expect(res.body.error).to.equal('patch property is required and must be of type JSON!');
           done(err);
         });
     });
