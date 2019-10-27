@@ -3,7 +3,7 @@ import app from '../src/server/express';
 
 const baseUrl = '/api/v1/login';
 
-describe('user login', () => {
+describe('test user login functionality', () => {
   context('if a user attempts to login by providing less than the required two fields', () => {
     it('should throw a required fields error', (done) => {
       chaiWithHttp
