@@ -1,3 +1,6 @@
+import expressJwt from 'express-jwt';
+import config from '../config';
+
 const userDataSanitizer = (req, res, next) => {
   const { body } = req;
   const userProperties = Object.keys(body);
@@ -34,8 +37,50 @@ const isPasswordValid = (req, res, next) => {
   return next();
 };
 
+const authenticate = expressJwt({
+  secret: config.jwtSecret,
+  userProperty: 'auth',
+});
+
+const isPatchDocumentValid = (req, res, next) => {
+  const { body: { document } } = req;
+  if (!document || typeof document !== typeof JSON) return res.status(400).json({ error: 'document property is required and must be of type JSON!' });
+  return next();
+};
+
+const isPatchArrayValid = (req, res, next) => {
+  const { body: { patch } } = req;
+  if (!patch || typeof patch !== typeof JSON) return res.status(400).json({ error: 'patch property is required and must be of type json or array!' });
+  return next();
+};
+
+const isOpValid = (req, res, next) => {
+  const { body: { patch } } = req;
+  const validOps = ['replace', 'add', 'remove'];
+
+  patch.forEach((obj) => {
+    if (!validOps.includes(obj.op)) return res.status(400).json({ error: 'op property only supports add, replace and remove operations!' });
+  });
+  return next();
+};
+
+const isPathValid = (req, res, next) => {
+  const { body: { patch } } = req;
+  const validPaths = ['/username', '/password'];
+
+  patch.forEach((obj) => {
+    if (!validPaths.includes(obj.path)) return res.status(400).json({ error: 'path property only supports /username and /password paths!' });
+  });
+  return next();
+};
+
 export {
   userDataSanitizer,
   isUsernameValid,
   isPasswordValid,
+  authenticate,
+  isPatchDocumentValid,
+  isPatchArrayValid,
+  isOpValid,
+  isPathValid,
 };

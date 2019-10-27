@@ -1,6 +1,5 @@
 module.exports = {
     env: {
-      browser: true,
       node: true,
       es6: true,
       mocha: true,
@@ -17,8 +16,9 @@ module.exports = {
       sourceType: 'module',
     },
     rules: {
-      "no-useless-escape": "off",
-    }
+      "no-useless-escape": 0,
+      "consistent-return": 0,
+    },
   };
  
   

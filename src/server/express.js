@@ -7,7 +7,8 @@ import helmet from 'helmet';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../../swagger.json';
-import authRoutes from '../routes/auth.routes';
+import authRoute from '../routes/auth.routes';
+import JsonPatchRoute from '../routes/jsonpatch.routes';
 
 const app = express();
 
@@ -19,12 +20,19 @@ app.use(helmet());
 app.use(cors());
 app.set('strict routing', true);
 
-app.use('/', authRoutes);
+app.use('/', authRoute);
+app.use('/', JsonPatchRoute);
 
 app.get('/', (req, res) => {
   res.redirect('/swagger');
 });
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({ error: `${err.message}` });
+  }
+});
 
 export default app;
