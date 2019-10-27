@@ -1,5 +1,10 @@
 import generateToken from '../utils/generateToken';
 
+/**
+ * @param  {} req
+ * @param  {} res
+ * @returns {} response object
+ */
 const login = (req, res) => {
   const { body: { username } } = req;
   const token = generateToken(username);

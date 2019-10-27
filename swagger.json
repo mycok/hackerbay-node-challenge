@@ -2,13 +2,199 @@
     "openapi": "3.0.0",
     "info": {
       "version": "v1.0.0",
-      "title": "hackerbay developer backend challenge",
-      "description": "a mini micro service built with node js",
+      "title": "HackerBay developer backend challenge",
+      "description": "A mini micro service built with node js",
       "contact": {
         "name": "@myco",
         "email": "mycovan@gmail.com"
       }
-    }
+    },
+    "servers": [
+      {
+        "url": "https://localhost:4000",
+        "description": "Local development server"
+      }
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "components": {
+      "schemas": {
+        "user": {
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "thumbnail": {
+          "properties": {
+            "imageUrl": {
+              "type": "string"
+            }
+          }
+        },
+        "json-patch": {
+          "properties": {
+            "document": {
+              "type": "Object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            },
+            "patch": {
+              "type": "Array",
+              "properties": {
+                "op": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "responses": {
+        "UnauthorizedError": {
+          "description": "Access token is missing or invalid"
+        }
+      }
+    },
+    "paths": {
+      "/api/v1/login": {
+        "post": {
+          "tags": ["login"],
+          "summary": "user login",
+          "requestBody": {
+            "description": "User login fields",
+            "required": "true",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                },
+                "example": {
+                  "username": "testuser",
+                  "password": "test#useR19paSSword"
+                }
+              }
+            },
+            "schema": {
+              "$ref": "#/components/schemas/user"
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "success. returns a generated auth token"
+            },
+            "400": {
+              "description": "provided invalid or missing required login properties!"
+            }
+          }
+        }
+      },
+      "/api/v1/jsonPatch": {
+        "patch": {
+          "tags": ["patch"],
+          "summary": "update user fields",
+          "security": {
+            "bearerAuth": []
+          },
+          "requestBody": {
+            "description": "Update selected user fields",
+            "required": "true",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/json-patch"
+                  },
+                  "example":{
+                    "document":{
+                      "username": "test",
+                      "password": "password"
+                    }, 
+                    "patch": [{"op": "replace", "path": "/username", "value": "michael"}]
+                  } 
+                }
+              }
+            },
+            "schema": {
+              "$ref": "#/components/schemas/json-patch"
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "success. returns the patched object"
+            },
+            "400": {
+              "description": "provided invalid / missing required patch properties!"
+            },
+            "401": {
+              "description": "auth token is missing or inavlid!"
+            }
+          }
+        },
+        "/api/v1/thumbnail": {
+          "patch": {
+            "tags": ["image download"],
+            "summary": "download and resize an image",
+            "security": {
+              "bearerAuth": []
+            },
+            "requestBody": {
+              "description": "An image url containing an image name along with an extension",
+              "required": "true",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schemas/thumbnail"
+                    },
+                    "example":{
+                      "imageUrl":"https://www.bigfoto.com/ship-sculpture.jpg"
+                    } 
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/thumbnail"
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "success. returns the resized image path"
+              },
+              "400": {
+                "description": "provided invalid url / url is missing an image name and an extension!"
+              },
+              "401": {
+                "description": "auth token is missing or inavlid!"
+              }
+            }
+          }
+      }
 }
 
 

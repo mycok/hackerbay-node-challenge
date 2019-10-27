@@ -12,6 +12,9 @@ This code base contains a node.js backend stateless micro-service
 
 - Node.js
 - Express.js
+- fast-json-patch
+- Mocha
+- Chai
 
 #### Usage
 
@@ -25,4 +28,10 @@ This code base contains a node.js backend stateless micro-service
 
 - Run `npm start` to start the production server
 
-- use an `HTTP client` of your choice to test the password reset functionality at `http://localhost:400`
+- Run `npm test` to run the entire test suite
+
+- use an `HTTP client` of your choice to test the password reset functionality at `http://localhost:4000/api/v1/{endpoint}`
+
+#### Note
+
+Navigate to the index route `localhost:4000` to view the API documentation
